@@ -4,12 +4,22 @@ import Foundation
 
 extension URL {
 
-    /// Helper function to create an NSError from a Unix errno.
+    /// Wrap the xattr functions's POSIX error codes in `NSError` instances.
+    ///
+    /// - note: Originally written by Martin R on StackOverflow: <https://stackoverflow.com/a/38343753/1460929>
+    /// - parameter err: POSIX error code.
+    /// - returns: NSError in the `NSPOSIXErrorDomain` with the code `err` and `userInfo` with a default localized description for the error code.
     private static func posixError(_ err: Int32) -> NSError {
         return NSError(domain: NSPOSIXErrorDomain, code: Int(err),
                        userInfo: [NSLocalizedDescriptionKey: String(cString: strerror(err))])
     }
 
+    /// Extended attribute data.
+    ///
+    /// - note: Originally written by Martin R on StackOverflow: <https://stackoverflow.com/a/38343753/1460929>
+    /// - parameter name: Attribute name
+    /// - throws: `NSError` in the `NSPOSIXErrorDomain` when no attribute of `name` was found.
+    /// - returns: Data representation of the attribute's value.
     public func extendedAttribute(forName name: String) throws -> Data  {
 
         let data = try self.withUnsafeFileSystemRepresentation { fileSystemPath -> Data in
@@ -31,6 +41,12 @@ extension URL {
         return data
     }
 
+    /// Set or overwrite an extended attribute.
+    ///
+    /// - note: Originally written by Martin R on StackOverflow: <https://stackoverflow.com/a/38343753/1460929>
+    /// - parameter data: Data representation of any value to be stored in the xattrs.
+    /// - parameter name: Attribute name
+    /// - throws: `NSError` in the `NSPOSIXErrorDomain` when writing the attribute failed.
     public func setExtendedAttribute(data: Data, forName name: String) throws {
 
         try self.withUnsafeFileSystemRepresentation { fileSystemPath in
@@ -41,6 +57,11 @@ extension URL {
         }
     }
 
+    /// Removed the extended attribute of `name`.
+    ///
+    /// - note: Originally written by Martin R on StackOverflow: <https://stackoverflow.com/a/38343753/1460929>
+    /// - parameter name: Attribute name to remove.
+    /// - throws: `NSError` in the `NSPOSIXErrorDomain`.
     public func removeExtendedAttribute(forName name: String) throws {
 
         try self.withUnsafeFileSystemRepresentation { fileSystemPath in
@@ -109,13 +130,22 @@ extension Xattrs {
         set { storeEncoded(xattrKey: xattr.name, value: newValue) }
     }
 
-    fileprivate func decode<T>(xattrKey: String) -> T? {
+    /// Attempt to decode an attribute as object, if it exists, and cast it to `T`.
+    ///
+    /// - parameter xattrKey: The extended attribute's name.
+    /// - returns: Decoded object or `nil` if the attribute was not found or its type does not match.
+    public func decode<T>(xattrKey: String) -> T? {
         guard let data = self[xattrKey: xattrKey] else { return nil }
         let unarchiver = NSKeyedUnarchiver(forReadingWith: data)
         return unarchiver.decodeObject(forKey: xattrKey) as? T
     }
 
-    fileprivate func storeEncoded(xattrKey: String, value: Any?) {
+    /// Encode the object as `Data` using `NSKeyedArchiver` or
+    /// remove existing values.
+    ///
+    /// - parameter xattrKey: The extended attribute's name.
+    /// - parameter value: Object to encode. Pass `nil` to remove the attribute.
+    public func storeEncoded(xattrKey: String, value: Any?) {
 
         guard let newValue = value else {
             self[xattrKey: xattrKey] = nil

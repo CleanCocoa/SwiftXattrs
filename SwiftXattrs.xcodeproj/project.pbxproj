@@ -33,6 +33,8 @@
 		50BC3B491F6D00DD002B4A2A /* SwiftXattrsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftXattrsTests.swift; sourceTree = "<group>"; };
 		50BC3B4B1F6D00DD002B4A2A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		50BC3B521F6D011E002B4A2A /* Helpers.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Helpers.swift; sourceTree = "<group>"; };
+		50BC3B541F6D09DB002B4A2A /* LICENSE */ = {isa = PBXFileReference; lastKnownFileType = text; path = LICENSE; sourceTree = "<group>"; };
+		50BC3B551F6D09DB002B4A2A /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -57,6 +59,8 @@
 		50BC3B191F6CF75A002B4A2A = {
 			isa = PBXGroup;
 			children = (
+				50BC3B541F6D09DB002B4A2A /* LICENSE */,
+				50BC3B551F6D09DB002B4A2A /* README.md */,
 				50BC3B251F6CF75B002B4A2A /* SwiftXattrs */,
 				50BC3B481F6D00DD002B4A2A /* SwiftXattrsTests */,
 				50BC3B241F6CF75B002B4A2A /* Products */,
