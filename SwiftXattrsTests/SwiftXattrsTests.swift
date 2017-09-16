@@ -69,8 +69,7 @@ class SwiftXattrsTests: XCTestCase {
 
         do {
             let initialData = try url.extendedAttribute(forName: Xattrs.Attributes.testInteger.name)
-            let unarchiver = NSKeyedUnarchiver(forReadingWith: initialData)
-            XCTAssertEqual(unarchiver.decodeObject(forKey: Xattrs.Attributes.testInteger.name) as? Int, 1337)
+            XCTAssertEqual(NSKeyedUnarchiver.unarchiveObject(with: initialData) as? Int, 1337)
         } catch {
             XCTFail("Unexpected error: \(error)")
         }
@@ -105,8 +104,7 @@ class SwiftXattrsTests: XCTestCase {
 
         do {
             let initialData = try url.extendedAttribute(forName: Xattrs.Attributes.testDictionary.name)
-            let unarchiver = NSKeyedUnarchiver(forReadingWith: initialData)
-            if let dictionary = unarchiver.decodeObject(forKey: Xattrs.Attributes.testDictionary.name) as? [String: Any] {
+            if let dictionary = NSKeyedUnarchiver.unarchiveObject(with: initialData) as? [String: Any] {
                 XCTAssertEqual(Array(dictionary.keys), ["power"])
                 XCTAssertEqual(dictionary["power"] as? Int, 100)
             } else {

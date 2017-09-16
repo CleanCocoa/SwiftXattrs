@@ -136,8 +136,7 @@ extension Xattrs {
     /// - returns: Decoded object or `nil` if the attribute was not found or its type does not match.
     public func decode<T>(xattrKey: String) -> T? {
         guard let data = self[xattrKey: xattrKey] else { return nil }
-        let unarchiver = NSKeyedUnarchiver(forReadingWith: data)
-        return unarchiver.decodeObject(forKey: xattrKey) as? T
+        return NSKeyedUnarchiver.unarchiveObject(with: data) as? T
     }
 
     /// Encode the object as `Data` using `NSKeyedArchiver` or
@@ -152,9 +151,7 @@ extension Xattrs {
             return
         }
 
-        let archiver = NSKeyedArchiver()
-        archiver.encode(newValue, forKey: xattrKey)
-        self[xattrKey: xattrKey] = archiver.encodedData
+        self[xattrKey: xattrKey] = NSKeyedArchiver.archivedData(withRootObject: newValue)
     }
 }
 
