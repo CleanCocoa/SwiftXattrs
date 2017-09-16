@@ -1,7 +1,3 @@
-<div align="center">
-    <img src="assets/title.png" width="300"/>
-</div>
-
 # SwiftXattrs
 
 ![Swift 3](https://img.shields.io/badge/Swift-3.2-blue.svg?style=flat)
