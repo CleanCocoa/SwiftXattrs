@@ -32,8 +32,8 @@ extension URL {
             var data = Data(count: length)
 
             // Retrieve attribute:
-            let result =  data.withUnsafeMutableBytes {
-                getxattr(fileSystemPath, name, $0, data.count, 0, 0)
+            let result = data.withUnsafeMutableBytes { (ptr: UnsafeMutablePointer<Data>) in
+                getxattr(fileSystemPath, name, ptr, length, 0, 0)
             }
             guard result >= 0 else { throw URL.posixError(errno) }
             return data
