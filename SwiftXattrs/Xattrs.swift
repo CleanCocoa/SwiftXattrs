@@ -26,17 +26,14 @@ extension URL {
 
             // Determine attribute size:
             let length = getxattr(fileSystemPath, name, nil, 0, 0, 0)
-            guard length >= 0 else { throw URL.posixError(errno) }
+            guard length != -1 else { throw URL.posixError(errno) }
+            guard let buffer = malloc(length) else { throw URL.posixError(errno) }
 
-            // Create buffer with required size:
-            var data = Data(count: length)
+            defer { free(buffer) }
+            let result = getxattr(fileSystemPath, name, buffer, length, 0, 0)
 
-            // Retrieve attribute:
-            let result = data.withUnsafeMutableBytes { (ptr: UnsafeMutablePointer<Data>) in
-                getxattr(fileSystemPath, name, ptr, length, 0, 0)
-            }
-            guard result >= 0 else { throw URL.posixError(errno) }
-            return data
+            guard result != -1 else { throw URL.posixError(errno) }
+            return Data(bytes: buffer, count: length)
         }
         return data
     }
