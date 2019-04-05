@@ -48,7 +48,7 @@ extension URL {
 
         try self.withUnsafeFileSystemRepresentation { fileSystemPath in
             let result = data.withUnsafeBytes {
-                setxattr(fileSystemPath, name, $0, data.count, 0, 0)
+                setxattr(fileSystemPath, name, $0.baseAddress, $0.count, 0, 0)
             }
             guard result >= 0 else { throw URL.posixError(errno) }
         }
