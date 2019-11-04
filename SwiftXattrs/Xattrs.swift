@@ -21,9 +21,7 @@ extension URL {
     /// - throws: `NSError` in the `NSPOSIXErrorDomain` when no attribute of `name` was found.
     /// - returns: Data representation of the attribute's value.
     public func extendedAttribute(forName name: String) throws -> Data  {
-
         let data = try self.withUnsafeFileSystemRepresentation { fileSystemPath -> Data in
-
             // Determine attribute size:
             let length = getxattr(fileSystemPath, name, nil, 0, 0, 0)
             guard length != -1 else { throw URL.posixError(errno) }
@@ -45,7 +43,6 @@ extension URL {
     /// - parameter name: Attribute name
     /// - throws: `NSError` in the `NSPOSIXErrorDomain` when writing the attribute failed.
     public func setExtendedAttribute(data: Data, forName name: String) throws {
-
         try self.withUnsafeFileSystemRepresentation { fileSystemPath in
             let result = data.withUnsafeBytes {
                 setxattr(fileSystemPath, name, $0.baseAddress, $0.count, 0, 0)
@@ -60,7 +57,6 @@ extension URL {
     /// - parameter name: Attribute name to remove.
     /// - throws: `NSError` in the `NSPOSIXErrorDomain`.
     public func removeExtendedAttribute(forName name: String) throws {
-
         try self.withUnsafeFileSystemRepresentation { fileSystemPath in
             let result = removexattr(fileSystemPath, name, 0)
             guard result >= 0 else { throw URL.posixError(errno) }
@@ -78,16 +74,23 @@ public class Xattrs {
 
     public subscript(xattrKey name: String) -> Data? {
         get {
-            return try? url.extendedAttribute(forName: name)
+            return try? self.get(xattr: name)
         }
-
         set {
-            guard let newValue = newValue else {
-                try? url.removeExtendedAttribute(forName: name)
-                return
-            }
-            try? url.setExtendedAttribute(data: newValue, forName: name)
+            try? self.set(xattr: name, to: newValue)
         }
+    }
+
+    public func set(xattr name: String, to value: Data?) throws {
+        guard let value = value else {
+            try url.removeExtendedAttribute(forName: name)
+            return
+        }
+        try url.setExtendedAttribute(data: value, forName: name)
+    }
+
+    public func get(xattr name: String) throws -> Data {
+        return try url.extendedAttribute(forName: name)
     }
 
     /// Extension point to add `static var`s of type `Xattr` to for subscript
@@ -142,7 +145,6 @@ extension Xattrs {
     /// - parameter xattrKey: The extended attribute's name.
     /// - parameter value: Object to encode. Pass `nil` to remove the attribute.
     public func storeEncoded(xattrKey: String, value: Any?) {
-
         guard let newValue = value else {
             self[xattrKey: xattrKey] = nil
             return
