@@ -163,7 +163,6 @@
 					};
 					50BC3B461F6D00DD002B4A2A = {
 						CreatedOnToolsVersion = 8.3.2;
-						DevelopmentTeam = FRMDA3XRGC;
 						LastSwiftMigration = 1020;
 						ProvisioningStyle = Automatic;
 					};
@@ -401,7 +400,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				COMBINE_HIDPI_IMAGES = YES;
-				DEVELOPMENT_TEAM = FRMDA3XRGC;
+				DEVELOPMENT_TEAM = "";
 				INFOPLIST_FILE = SwiftXattrsTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = de.christiantietze.SwiftXattrsTests;
@@ -414,7 +413,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				COMBINE_HIDPI_IMAGES = YES;
-				DEVELOPMENT_TEAM = FRMDA3XRGC;
+				DEVELOPMENT_TEAM = "";
 				INFOPLIST_FILE = SwiftXattrsTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = de.christiantietze.SwiftXattrsTests;
