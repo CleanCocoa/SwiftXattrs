@@ -28,11 +28,11 @@
 		50BC3B231F6CF75B002B4A2A /* SwiftXattrs.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = SwiftXattrs.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		50BC3B261F6CF75B002B4A2A /* SwiftXattrs.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SwiftXattrs.h; sourceTree = "<group>"; };
 		50BC3B271F6CF75B002B4A2A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		50BC3B411F6CF775002B4A2A /* Xattrs.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Xattrs.swift; sourceTree = "<group>"; };
+		50BC3B411F6CF775002B4A2A /* Xattrs.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Xattrs.swift; path = ../Sources/SwiftXattrs/Xattrs.swift; sourceTree = "<group>"; };
 		50BC3B471F6D00DD002B4A2A /* SwiftXattrsTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SwiftXattrsTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		50BC3B491F6D00DD002B4A2A /* SwiftXattrsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftXattrsTests.swift; sourceTree = "<group>"; };
+		50BC3B491F6D00DD002B4A2A /* SwiftXattrsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = SwiftXattrsTests.swift; path = ../Tests/SwiftXattrsTests/SwiftXattrsTests.swift; sourceTree = "<group>"; };
 		50BC3B4B1F6D00DD002B4A2A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		50BC3B521F6D011E002B4A2A /* Helpers.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Helpers.swift; sourceTree = "<group>"; };
+		50BC3B521F6D011E002B4A2A /* Helpers.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Helpers.swift; path = ../Tests/SwiftXattrsTests/Helpers.swift; sourceTree = "<group>"; };
 		50BC3B541F6D09DB002B4A2A /* LICENSE */ = {isa = PBXFileReference; lastKnownFileType = text; path = LICENSE; sourceTree = "<group>"; };
 		50BC3B551F6D09DB002B4A2A /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 /* End PBXFileReference section */
