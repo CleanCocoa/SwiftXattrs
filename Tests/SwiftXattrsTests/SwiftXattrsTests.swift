@@ -69,7 +69,9 @@ class SwiftXattrsTests: XCTestCase {
 
         do {
             let initialData = try url.extendedAttribute(forName: Xattrs.Attributes.testInteger.name)
-            XCTAssertEqual(NSKeyedUnarchiver.unarchiveObject(with: initialData) as? Int, 1337)
+            let number = try NSKeyedUnarchiver.unarchivedObject(ofClass: NSNumber.self, from: initialData)
+            let intValue = try XCTUnwrap(number as? Int)
+            XCTAssertEqual(intValue, 1337)
         } catch {
             XCTFail("Unexpected error: \(error)")
         }
