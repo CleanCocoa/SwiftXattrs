@@ -11,7 +11,7 @@ extension Xattrs.Attributes {
 
 class SwiftXattrsTests: XCTestCase {
 
-    func testStringXattr() {
+    func testStringXattr() throws {
 
         let url = generatedTempFileURL()
         touch(url: url)
@@ -19,9 +19,8 @@ class SwiftXattrsTests: XCTestCase {
 
         // Precondition
 
-        do {
-            _ = try url.extendedAttribute(forName: Xattrs.Attributes.testString.name)
-        } catch let error as NSError {
+        try XCTAssertThrowsError(url.extendedAttribute(forName: Xattrs.Attributes.testString.name)) { error in
+            let error = error as NSError
             XCTAssertEqual(error.domain, NSPOSIXErrorDomain)
             XCTAssertEqual(error.code, 93)
             XCTAssert(error.description.lowercased().contains("not found"))
@@ -33,19 +32,15 @@ class SwiftXattrsTests: XCTestCase {
 
         xattrs[.testString] = "Foo"
 
-        do {
-            let initialData = try url.extendedAttribute(forName: Xattrs.Attributes.testString.name)
-            XCTAssertEqual(String(data: initialData, encoding: .utf8), "Foo")
-        } catch {
-            XCTFail("Unexpected error: \(error)")
-        }
+        let initialData = try url.extendedAttribute(forName: Xattrs.Attributes.testString.name)
+        XCTAssertEqual(String(data: initialData, encoding: .utf8), "Foo")
 
         // Reading
 
         XCTAssertEqual(xattrs[.testString], "Foo")
     }
 
-    func testIntegerXattr() {
+    func testIntegerXattr() throws {
 
         let url = generatedTempFileURL()
         touch(url: url)
@@ -53,9 +48,8 @@ class SwiftXattrsTests: XCTestCase {
 
         // Precondition
 
-        do {
-            _ = try url.extendedAttribute(forName: Xattrs.Attributes.testInteger.name)
-        } catch let error as NSError {
+        try XCTAssertThrowsError(url.extendedAttribute(forName: Xattrs.Attributes.testInteger.name)) { error in
+            let error = error as NSError
             XCTAssertEqual(error.domain, NSPOSIXErrorDomain)
             XCTAssertEqual(error.code, 93)
             XCTAssert(error.description.lowercased().contains("not found"))
@@ -67,21 +61,17 @@ class SwiftXattrsTests: XCTestCase {
 
         xattrs[.testInteger] = 1337
 
-        do {
-            let initialData = try url.extendedAttribute(forName: Xattrs.Attributes.testInteger.name)
-            let number = try NSKeyedUnarchiver.unarchivedObject(ofClass: NSNumber.self, from: initialData)
-            let intValue = try XCTUnwrap(number as? Int)
-            XCTAssertEqual(intValue, 1337)
-        } catch {
-            XCTFail("Unexpected error: \(error)")
-        }
+        let initialData = try url.extendedAttribute(forName: Xattrs.Attributes.testInteger.name)
+        let number = try NSKeyedUnarchiver.unarchivedObject(ofClass: NSNumber.self, from: initialData)
+        let intValue = try XCTUnwrap(number as? Int)
+        XCTAssertEqual(intValue, 1337)
 
         // Reading
 
         XCTAssertEqual(xattrs[.testInteger], 1337)
     }
 
-    func testDictionaryXattr() {
+    func testDictionaryXattr() throws {
 
         let url = generatedTempFileURL()
         touch(url: url)
@@ -89,9 +79,8 @@ class SwiftXattrsTests: XCTestCase {
 
         // Precondition
 
-        do {
-            _ = try url.extendedAttribute(forName: Xattrs.Attributes.testDictionary.name)
-        } catch let error as NSError {
+        try XCTAssertThrowsError(url.extendedAttribute(forName: Xattrs.Attributes.testDictionary.name)) { error in
+            let error = error as NSError
             XCTAssertEqual(error.domain, NSPOSIXErrorDomain)
             XCTAssertEqual(error.code, 93)
             XCTAssert(error.description.lowercased().contains("not found"))
@@ -104,26 +93,24 @@ class SwiftXattrsTests: XCTestCase {
         let value: [String: Any] = ["power" : 100]
         xattrs[.testDictionary] = value
 
-        do {
-            let initialData = try url.extendedAttribute(forName: Xattrs.Attributes.testDictionary.name)
-            if let dictionary = NSKeyedUnarchiver.unarchiveObject(with: initialData) as? [String: Any] {
-                XCTAssertEqual(Array(dictionary.keys), ["power"])
-                XCTAssertEqual(dictionary["power"] as? Int, 100)
-            } else {
-                XCTFail("Expected encoded dictionary")
+        let initialData = try url.extendedAttribute(forName: Xattrs.Attributes.testDictionary.name)
+        let nsDictionary = try XCTUnwrap(NSKeyedUnarchiver.unarchivedObject(ofClass: NSDictionary.self, from: initialData))
+        // Bridging the NSDictionary  to Swift manually:
+        let dictionary: [String: Any] = try {
+            var result: [String: Any] = [:]
+            for key in nsDictionary.allKeys {
+                let key = try XCTUnwrap(key as? String)
+                result[key] = nsDictionary.value(forKey: key)
             }
-        } catch {
-            XCTFail("Unexpected error: \(error)")
-        }
+            return result
+        }()
+        XCTAssertEqual(Array(dictionary.keys), ["power"])
+        XCTAssertEqual(dictionary["power"] as? Int, 100)
 
         // Reading
 
-        if let dictionary = xattrs[.testDictionary] {
-            XCTAssertEqual(Array(dictionary.keys), ["power"])
-            XCTAssertEqual(dictionary["power"] as? Int, 100)
-        } else {
-            XCTFail("Expected encoded dictionary")
-        }
+        let testDictionary = try XCTUnwrap(xattrs[.testDictionary], "Expected encoded dictionary")
+        XCTAssertEqual(Array(testDictionary.keys), ["power"])
+        XCTAssertEqual(testDictionary["power"] as? Int, 100)
     }
-
 }
